@@ -1,14 +1,11 @@
 import {UI_ELEMENTS} from "./view.js";
 import {showWeather} from "./view.js";
 
-// showWeather(data.name, getCelsius(data.main.temp))
+UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeather);
+UI_ELEMENTS.HEART_BTN.addEventListener('click', addFavoriteCity);
 
 const SERVER_URL = 'https://api.openweathermap.org/data/2.5/weather';
 const API_KEY = 'f660a2fb1e4bad108d6160b7f58c555f';
-
-UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeather);
-UI_ELEMENTS.HEART_BTN.addEventListener('click', addFavoriteCity);
-UI_ELEMENTS.HEART_BTN.addEventListener('click', pushLikeCity);
 
 const favoriteCities = [];
 
@@ -17,8 +14,8 @@ function getWeather(event){
     const cityName = UI_ELEMENTS.INPUT_SEARCH.value
     // const favoriteCity = currentCity;
     // ? or if
-    const URL = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`
-    fetch(URL)
+    const url = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             const weatherObject = {
@@ -36,16 +33,9 @@ function getWeather(event){
     UI_ELEMENTS.INPUT_SEARCH.value = '';
 };
 
-function getWeatherF(currentCity){
-    console.log('working');
-    const favoriteCity = currentCity;
-    const url = `${SERVER_URL}?q=${favoriteCity}&appid=${API_KEY}`
-    fetch(url)
-        .then(response => response.json())
-        .then(data => showWeather(data.name, getCelsius(data.main.temp)));
-}
-
-function pushLikeCity(){
+function addFavoriteCity(){
+    UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
+    
     const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
     const addedCity = favoriteCities.includes(currentCity,0);
 
@@ -68,20 +58,34 @@ function showLikeCityOnDisplay(){
     li.append(button);
     UI_ELEMENTS.FAVORITE_CITIES.append(li);
 
-    button.addEventListener('click',()=> {
-        const findedCity = favoriteCities.findIndex(item => item === currentCity);
-        favoriteCities.splice(findedCity, 1);
-        li.remove();
-    });
-    
+    removeCity(button,currentCity,li);
+
     li.onclick = () => {
-        getWeatherF(li.textContent);
+        // getWeatherF(li.textContent); 
+        console.log('weather')
     }
 }
 
-function addFavoriteCity(){
-    UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
+function removeCity(element,city,currentSity){
+    element.addEventListener('click',()=> {
+        const findedCity = favoriteCities.findIndex(item => item === city);
+        favoriteCities.splice(findedCity, 1);
+        currentSity.remove();
+    });
 }
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------TABS----------------------------------------------
+
 
 function DeleteActiveClassesTabs() {
     UI_ELEMENTS.TABS.forEach(tab => tab.classList.remove('main-tabs__block--active'))
