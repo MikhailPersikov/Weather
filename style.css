@@ -102,6 +102,10 @@ body{
     cursor: pointer;
 }
 
+.city-list__item:hover{
+    text-decoration: underline;
+}
+
 .main-box__left{
     width: 50%;
     background-color: var(--default-color);
@@ -256,5 +260,15 @@ body{
 }
 
 .city-list__close-btn{
-    
+    background: url('IMG/close-icon.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 20px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+.city-list__close-btn:hover{
+    transform: rotate(180deg);
 }

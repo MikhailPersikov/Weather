@@ -1,31 +1,52 @@
 import {UI_ELEMENTS} from "./view.js";
 import {showWeather} from "./view.js";
 
+// showWeather(data.name, getCelsius(data.main.temp))
+
 const SERVER_URL = 'https://api.openweathermap.org/data/2.5/weather';
 const API_KEY = 'f660a2fb1e4bad108d6160b7f58c555f';
 
-UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeater);
+UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeather);
 UI_ELEMENTS.HEART_BTN.addEventListener('click', addFavoriteCity);
 UI_ELEMENTS.HEART_BTN.addEventListener('click', pushLikeCity);
 
 const favoriteCities = [];
 
-function getWeater(event){
+function getWeather(event){
     event.preventDefault();
     const cityName = UI_ELEMENTS.INPUT_SEARCH.value
-    const url = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`
-    fetch(url)
+    // const favoriteCity = currentCity;
+    // ? or if
+    const URL = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`
+    fetch(URL)
         .then(response => response.json())
-        .then(data => showWeather(data.name, getCelsius(data.main.temp)));
+        .then(data => {
+            const weatherObject = {
+                name: data.name,
+                temp: data.main.temp,
+                feels_like: data.main.feels_like,
+                weather: data.weather[0].main,
+                sunrise: data.sys.sunrise,
+                sunset: data.sys.sunset,
+                icon:data.weather[0].icon,
+            };
+            showWeather(weatherObject);
+        })
+        .catch((error)=> alert(error))
     UI_ELEMENTS.INPUT_SEARCH.value = '';
 };
 
-function getCelsius(temperature){
-    return (temperature - 273).toFixed(0)
-};
+function getWeatherF(currentCity){
+    console.log('working');
+    const favoriteCity = currentCity;
+    const url = `${SERVER_URL}?q=${favoriteCity}&appid=${API_KEY}`
+    fetch(url)
+        .then(response => response.json())
+        .then(data => showWeather(data.name, getCelsius(data.main.temp)));
+}
 
 function pushLikeCity(){
-    const currentCity = UI_ELEMENTS.TITLES_CITY.textContent;
+    const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
     const addedCity = favoriteCities.includes(currentCity,0);
 
     if(addedCity) console.log('Error')
@@ -36,28 +57,26 @@ function pushLikeCity(){
 }
 
 function showLikeCityOnDisplay(){
-    console.log(favoriteCities);
-    createCitiesLi();
-    const favoriteCity = `${UI_ELEMENTS.TITLES_CITY.textContent}`
-    UI_ELEMENTS.FAVORITE_CITIES.lastChild.textContent = favoriteCity;
-}
+    console.log(favoriteCities)
+    const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
 
-function createCitiesLi(){
-    console.log('working')
-    console.log(UI_ELEMENTS.FAVORITE_CITIES.lastChild)
-    // UI_ELEMENTS.FAVORITE_CITIES.lastChild.innerHTML = `
-    //     <li class="city-list__item">
-    //     Dane
-    //     <button class="city-list__close-btn">x</button>
-    // </li>
-    // `
     const li = document.createElement('li');
-    li.className = 'city-list__item1';
     const button = document.createElement('button');
     button.className = 'city-list__close-btn';    
+    li.className = 'city-list__item';
+    li.textContent = currentCity;
+    li.append(button);
     UI_ELEMENTS.FAVORITE_CITIES.append(li);
-    console.log(UI_ELEMENTS.FAVORITE_CITIES.firstChild,'debug');
-    UI_ELEMENTS.FAVORITE_CITIES.firstChild.append(button);
+
+    button.addEventListener('click',()=> {
+        const findedCity = favoriteCities.findIndex(item => item === currentCity);
+        favoriteCities.splice(findedCity, 1);
+        li.remove();
+    });
+    
+    li.onclick = () => {
+        getWeatherF(li.textContent);
+    }
 }
 
 function addFavoriteCity(){
