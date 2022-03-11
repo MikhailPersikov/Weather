@@ -10,6 +10,7 @@ const API_KEY = 'f660a2fb1e4bad108d6160b7f58c555f';
 const favoriteCities = [];
 
 function getWeather(){
+    UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
     let cityName;
     const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
     formValue ? cityName = formValue : cityName = this.textContent;
@@ -34,40 +35,46 @@ function getWeather(){
 
 function addFavoriteCity(){
     UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
+    const active = UI_ELEMENTS.HEART_BTN.className;
+    console.log(active);
     const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
     const addedCity = favoriteCities.includes(currentCity,0);
 
     if(addedCity) {
-        console.log('Error. This city is in favorite cities');   
-    } else {
-            favoriteCities.push(currentCity);
-            showLikeCityOnDisplay();
+        console.log('Error. This city is in favorite cities'); 
+        let test = document.querySelectorAll('.city-list__close-btn')
+        test.forEach(element =>{
+        console.log(element)
+          if (true) removeCity();
+      })
+    }else {
+        favoriteCities.push(currentCity);
+        createElementForCity();
     }
 }
 
-function showLikeCityOnDisplay(){
+function createElementForCity(){
     console.log(favoriteCities)
-    const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
-
     const li = document.createElement('li');
     const button = document.createElement('button');
     button.className = 'city-list__close-btn';    
     li.className = 'city-list__item';
-    li.textContent = currentCity;
+    li.textContent = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
     li.append(button);
     UI_ELEMENTS.FAVORITE_CITIES.append(li);
 
-    removeCity(button,currentCity,li);
+    button.addEventListener('click', removeCity) 
     li.addEventListener('click', getWeather)
 }
 
-function removeCity(element,city,currentSity){
-    element.addEventListener('click',()=> {
-        const findedCity = favoriteCities.findIndex(item => item === city);
-        favoriteCities.splice(findedCity, 1);
-        currentSity.remove();
-    });
-}
+function removeCity(){
+        console.log(this)
+        const thisCity = this.parentElement.textContent;
+        const finedCity = favoriteCities.indexOf(thisCity)
+        favoriteCities.splice(finedCity,1);
+        UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
+        this.parentElement.remove();      
+};
 
 
 
