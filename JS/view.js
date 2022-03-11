@@ -13,7 +13,7 @@ export const UI_ELEMENTS = {
     DETAILS_FEELS_LIKE : document.querySelector('.feels_like'),
     DETAILS_WEATHER : document.querySelector('.weather'),
     DETAILS_SUNRISE : document.querySelector('.sunrise'),
-    DETAILS_SUNSET : document.querySelector('sunset'),
+    DETAILS_SUNSET : document.querySelector('.sunset'),
 }
 
 export function showWeather(object) {
@@ -24,4 +24,11 @@ export function showWeather(object) {
     UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${(object.temp - 273).toFixed(0)}°`;
     UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${(object.temp - 273).toFixed(0)}°`;
     UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${(object.feels_like -273).toFixed(0)}°`;
+    UI_ELEMENTS.DETAILS_WEATHER.textContent = `${object.weather}`;
+
+    const sunrise = new Date(object.sunrise*1000);
+    const sunset = new Date(object.sunset*1000);
+    
+    UI_ELEMENTS.DETAILS_SUNRISE.textContent  = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
+    UI_ELEMENTS.DETAILS_SUNSET.textContent  = `${sunset.getHours()}:${sunset.getHours()}`;
 }

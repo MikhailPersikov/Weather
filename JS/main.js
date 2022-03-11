@@ -9,14 +9,13 @@ const API_KEY = 'f660a2fb1e4bad108d6160b7f58c555f';
 
 const favoriteCities = [];
 
-function getWeather(event){
-    event.preventDefault();
-    const cityName = UI_ELEMENTS.INPUT_SEARCH.value
-    // const favoriteCity = currentCity;
-    // ? or if
-    const url = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`
-    fetch(url)
-        .then(response => response.json())
+function getWeather(){
+    let cityName;
+    const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
+    formValue ? cityName = formValue : cityName = this.textContent;
+    const URL = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`;
+    fetch(URL)
+        .then(res => res.json())
         .then(data => {
             const weatherObject = {
                 name: data.name,
@@ -35,12 +34,12 @@ function getWeather(event){
 
 function addFavoriteCity(){
     UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
-    
     const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
     const addedCity = favoriteCities.includes(currentCity,0);
 
-    if(addedCity) console.log('Error')
-        else {
+    if(addedCity) {
+        console.log('Error. This city is in favorite cities');   
+    } else {
             favoriteCities.push(currentCity);
             showLikeCityOnDisplay();
     }
@@ -59,11 +58,7 @@ function showLikeCityOnDisplay(){
     UI_ELEMENTS.FAVORITE_CITIES.append(li);
 
     removeCity(button,currentCity,li);
-
-    li.onclick = () => {
-        // getWeatherF(li.textContent); 
-        console.log('weather')
-    }
+    li.addEventListener('click', getWeather)
 }
 
 function removeCity(element,city,currentSity){
@@ -73,7 +68,6 @@ function removeCity(element,city,currentSity){
         currentSity.remove();
     });
 }
-
 
 
 
