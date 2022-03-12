@@ -32,7 +32,10 @@ export function getWeather(){
             showWeather(weatherObject);
             getForcast(cityName);
         })
-        .catch((error)=> alert(error))
+        .catch((error)=> {
+            alert(error)
+            UI_ELEMENTS.INPUT_SEARCH.value = '';
+        })
 };
 
 export function getForcast(cityName){

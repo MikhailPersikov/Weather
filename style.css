@@ -225,7 +225,7 @@ body{
 .weather-forecast__top{
     display: flex;
     justify-content: space-between;
-    margin-bottom: 38px;
+    margin-bottom: 10px;
 }
 
 .weather-forecast__list-item{
@@ -276,5 +276,4 @@ body{
 
 .weather-forecast__img{
     float: right;
-    w
 }

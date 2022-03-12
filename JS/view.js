@@ -43,7 +43,7 @@ export function showForcast(arr) {
     UI_ELEMENTS.FORECAST_LIST.innerHTML = '';
     // if (UL.length !== 0) UL.childNodes.forEach(li => li.remove())
     for (let i = 0; i < arr.length; i++) {
-        const date = arr[i].dt * 1000;
+        const date = arr[i].dt;
         UI_ELEMENTS.FORECAST_LIST.innerHTML += `
         <li class="weather-forecast__list-item">
             <div class="weather-forecast__top">
@@ -93,7 +93,6 @@ export function addFavoriteCity(){
     const addedCity = favoriteCities.includes(currentCity,0);
 
     if(addedCity) {
-        console.log('Error. This city is in favorite cities'); 
         const closeBtn = document.querySelectorAll('.city-list__close-btn')
         closeBtn.forEach(element =>{
             if(element.parentElement.textContent === currentCity) removeCity(element);
