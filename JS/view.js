@@ -1,3 +1,6 @@
+import {favoriteCities} from "./main.js";
+import {getWeather} from "./main.js";
+
 export const UI_ELEMENTS = {
     FORM_SEARCH: document.querySelector('.search-form'),
     INPUT_SEARCH: document.querySelector('.search__input'),
@@ -22,9 +25,9 @@ export function showWeather(object) {
     UI_ELEMENTS.TITLES_CITY_DETAILS.textContent = `${object.name}`;
     UI_ELEMENTS.TITLES_CITY_FORECAST.textContent = `${object.name}`;
 
-    UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${(object.temp - 273).toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${(object.temp - 273).toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${(object.feels_like -273).toFixed(0)}°`;
+    UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${object.temp.toFixed(0)}°`;
+    UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${object.temp.toFixed(0)}°`;
+    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${object.temp.toFixed(0)}°`;
     UI_ELEMENTS.DETAILS_WEATHER.textContent = `${object.weather}`;
 
     const sunrise = new Date(object.sunrise * 1000);
@@ -35,17 +38,15 @@ export function showWeather(object) {
 }
 
 export function showForcast(arr) {
-    const date = new Date(arr[0].dt * 1000)
-    console.log(arr[0].main.temp)
-    const UL = UI_ELEMENTS.FORECAST_LIST;
-    if (UL.length !== 0) UL.childNodes.forEach(li => li.remove())
-    
+    UI_ELEMENTS.FORECAST_LIST.innerHTML = '';
+    // if (UL.length !== 0) UL.childNodes.forEach(li => li.remove())
     for (let i = 0; i < arr.length; i++) {
-        UL.innerHTML += `
+        const date = arr[i].dt * 1000;
+        UI_ELEMENTS.FORECAST_LIST.innerHTML += `
         <li class="weather-forecast__list-item">
             <div class="weather-forecast__top">
-                <p class="weather-forecast__text">${date.getMonth()}.${date.getFullYear()} </p>
-                <p class="weather-forecast__text">${date.getHours()}:${date.getMinutes()}</p>
+                <p class="weather-forecast__text">${convertDate(date)}</p>
+                <p class="weather-forecast__text">${convertTime(date)}</p>
                 </div>
                 <div class="weather-forecast__bottom">
                 <div class="weather-forecast__parameters">
@@ -60,9 +61,21 @@ export function showForcast(arr) {
         </li> 
         `
     }
-        console.log( UI_ELEMENTS.FORECAST_LIST.childNodes,'debug')
-    }
+}
 
+function convertTime(ms) {
+     return new Date( ms * 1000).toLocaleTimeString('en-GB', {
+        hour: 'numeric',
+        minute: 'numeric'
+      })
+}
+
+function convertDate(ms){
+    return new Date(ms * 1000).toLocaleDateString('en-GB', {
+        month: 'short',
+        day: '2-digit',
+      })
+}
 
 export function removeCity(element){
     const thisCity = element.parentElement.textContent;
@@ -72,4 +85,53 @@ export function removeCity(element){
     element.parentElement.remove();      
 };
 
-// console.log(UI_ELEMENTS.FORECAST_LIST.childNodes)
+export function addFavoriteCity(){
+    UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
+    const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
+    const addedCity = favoriteCities.includes(currentCity,0);
+
+    if(addedCity) {
+        console.log('Error. This city is in favorite cities'); 
+        const closeBtn = document.querySelectorAll('.city-list__close-btn')
+        closeBtn.forEach(element =>{
+        console.log(element)
+          if (element.parentElement.textContent === currentCity) removeCity(element);
+      })
+    }else {
+        favoriteCities.push(currentCity);
+        createElementForCity();
+    }
+}
+
+export function createElementForCity(){
+    // console.log(favoriteCities)
+    const li = document.createElement('li');
+    const button = document.createElement('button');
+    button.className = 'city-list__close-btn';    
+    li.className = 'city-list__item';
+    li.textContent = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
+    li.append(button);
+    UI_ELEMENTS.FAVORITE_CITIES.append(li);
+
+    button.addEventListener('click', (e)=> removeCity(e.target)) 
+    li.addEventListener('click', getWeather)
+}
+
+//-----------------------------------TABS-----------------------------------------
+
+function DeleteActiveClassesTabs() {
+    UI_ELEMENTS.TABS.forEach(tab => tab.classList.remove('main-tabs__block--active'))
+    UI_ELEMENTS.TABS_BUTTONS.forEach(tabBtn => tabBtn.classList.remove('main-tabs__item--active'))
+}
+
+for (const tabBtn of UI_ELEMENTS.TABS_BUTTONS){
+    tabBtn.addEventListener('click', () => {
+        const idForTab = tabBtn.getAttribute('href')
+        const currentTab = document.querySelector(idForTab)
+
+        DeleteActiveClassesTabs()
+
+        currentTab.classList.add('main-tabs__block--active')
+        tabBtn.classList.add('main-tabs__item--active')
+    })
+}
