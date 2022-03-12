@@ -5,6 +5,7 @@ export const UI_ELEMENTS = {
     FORM_SEARCH: document.querySelector('.search-form'),
     INPUT_SEARCH: document.querySelector('.search__input'),
     NOW_TEMPERATURE: document.querySelector('.weather-now__temperature'),
+    NOW_WEATHER: document.querySelector('.weather-now__img'),
     TITLES_CITY_NOW: document.querySelector('.title-city-now'),
     TITLES_CITY_DETAILS: document.querySelector('.weather-details__title'),
     TITLES_CITY_FORECAST: document.querySelector('.weather-forecast__title'),
@@ -25,6 +26,7 @@ export function showWeather(object) {
     UI_ELEMENTS.TITLES_CITY_DETAILS.textContent = `${object.name}`;
     UI_ELEMENTS.TITLES_CITY_FORECAST.textContent = `${object.name}`;
 
+    UI_ELEMENTS.NOW_WEATHER.setAttribute('src',`https://openweathermap.org/img/wn/${object.icon}@4x.png`)
     UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${object.temp.toFixed(0)}°`;
     UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${object.temp.toFixed(0)}°`;
     UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${object.temp.toFixed(0)}°`;
@@ -55,7 +57,7 @@ export function showForcast(arr) {
                 </div>
                 <div class="weather-forecast__precipitation">
                 <p class="weather-forecast__text"> ${arr[i].weather[0].main}</p>
-                <img src="./img/rain.png" alt="weather icon" class="weather-forecast__img">
+                <img src="https://openweathermap.org/img/wn/${arr[0].weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
                 </div>
             </div>
         </li> 
@@ -70,8 +72,8 @@ function convertTime(ms) {
       })
 }
 
-function convertDate(ms){
-    return new Date(ms * 1000).toLocaleDateString('en-GB', {
+function convertDate(date){
+    return new Date(date * 1000).toLocaleDateString('en-GB', {
         month: 'short',
         day: '2-digit',
       })
@@ -94,8 +96,7 @@ export function addFavoriteCity(){
         console.log('Error. This city is in favorite cities'); 
         const closeBtn = document.querySelectorAll('.city-list__close-btn')
         closeBtn.forEach(element =>{
-        console.log(element)
-          if (element.parentElement.textContent === currentCity) removeCity(element);
+            if(element.parentElement.textContent === currentCity) removeCity(element);
       })
     }else {
         favoriteCities.push(currentCity);
@@ -104,7 +105,7 @@ export function addFavoriteCity(){
 }
 
 export function createElementForCity(){
-    // console.log(favoriteCities)
+    console.log(favoriteCities)
     const li = document.createElement('li');
     const button = document.createElement('button');
     button.className = 'city-list__close-btn';    
@@ -115,6 +116,9 @@ export function createElementForCity(){
 
     button.addEventListener('click', (e)=> removeCity(e.target)) 
     li.addEventListener('click', getWeather)
+    li.onclick = ()=> {
+        UI_ELEMENTS.HEART_BTN.classList.add('active-heard')
+    }
 }
 
 //-----------------------------------TABS-----------------------------------------

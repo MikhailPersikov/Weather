@@ -37,7 +37,6 @@ export function getWeather(){
 
 export function getForcast(cityName){
     const URL = `${SERVER_URL_FORCAST}?q=${cityName}&appid=${API_KEY}&cnt=7&units=metric`;
-    console.log(URL)
     fetch(URL)
         .then(resp => resp.json())
         .then(data => {
@@ -46,4 +45,6 @@ export function getForcast(cityName){
             showForcast(arr);
         })
     UI_ELEMENTS.INPUT_SEARCH.value = '';
+    const finedCity = favoriteCities.find(item => item === cityName)
+    if(finedCity === undefined) UI_ELEMENTS.HEART_BTN.classList.remove('active-heard')
 }

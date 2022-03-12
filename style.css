@@ -160,8 +160,8 @@ body{
 }
 
 .weather-now__img{
-    width: 78px;
-    height: 59px;
+    width: 176px;
+    height: 176px;
     align-self: center;
 }
 
@@ -276,4 +276,5 @@ body{
 
 .weather-forecast__img{
     float: right;
+    w
 }
