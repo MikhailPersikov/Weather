@@ -236,6 +236,7 @@ body{
 .weather-forecast__text{
     font-size: 18px;
     line-height: 21px;
+    margin-bottom: 10px;
 }
 
 .weather-forecast__bottom{
@@ -271,4 +272,8 @@ body{
 
 .city-list__close-btn:hover{
     transform: rotate(180deg);
+}
+
+.weather-forecast__img{
+    float: right;
 }

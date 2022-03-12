@@ -1,20 +1,23 @@
 import {UI_ELEMENTS} from "./view.js";
 import {showWeather} from "./view.js";
+import {showForcast} from "./view.js";
+import {removeCity} from "./view.js";
 
 UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeather);
+UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getForcast);
 UI_ELEMENTS.HEART_BTN.addEventListener('click', addFavoriteCity);
 
-const SERVER_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const SERVER_URL_NOW = 'https://api.openweathermap.org/data/2.5/weather';
+const SERVER_URL_FORCAST = 'https://api.openweathermap.org/data/2.5/forecast'
 const API_KEY = 'f660a2fb1e4bad108d6160b7f58c555f';
 
 const favoriteCities = [];
 
 function getWeather(){
-    UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
     let cityName;
     const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
     formValue ? cityName = formValue : cityName = this.textContent;
-    const URL = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`;
+    const URL = `${SERVER_URL_NOW}?q=${cityName}&appid=${API_KEY}`;
     fetch(URL)
         .then(res => res.json())
         .then(data => {
@@ -30,22 +33,34 @@ function getWeather(){
             showWeather(weatherObject);
         })
         .catch((error)=> alert(error))
-    UI_ELEMENTS.INPUT_SEARCH.value = '';
 };
+
+function getForcast(){
+    const cityName = UI_ELEMENTS.INPUT_SEARCH.value;
+    const URL = `${SERVER_URL_FORCAST}?q=${cityName}&appid=${API_KEY}&cnt=1&units=metric`;
+
+    fetch(URL)
+        .then(resp => resp.json())
+        .then(data => {
+            let arr = [];
+            arr = arr.concat(data.list);
+            showForcast(arr);
+        })
+    UI_ELEMENTS.INPUT_SEARCH.value = '';
+}
 
 function addFavoriteCity(){
     UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
-    const active = UI_ELEMENTS.HEART_BTN.className;
-    console.log(active);
+    // const active = UI_ELEMENTS.HEART_BTN.className;
     const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
     const addedCity = favoriteCities.includes(currentCity,0);
 
     if(addedCity) {
         console.log('Error. This city is in favorite cities'); 
-        let test = document.querySelectorAll('.city-list__close-btn')
-        test.forEach(element =>{
+        const closeBtn = document.querySelectorAll('.city-list__close-btn')
+        closeBtn.forEach(element =>{
         console.log(element)
-          if (true) removeCity();
+          if (element.parentElement.textContent === currentCity) removeCity(element);
       })
     }else {
         favoriteCities.push(currentCity);
@@ -63,24 +78,9 @@ function createElementForCity(){
     li.append(button);
     UI_ELEMENTS.FAVORITE_CITIES.append(li);
 
-    button.addEventListener('click', removeCity) 
+    button.addEventListener('click', (e)=> removeCity(e.target)) 
     li.addEventListener('click', getWeather)
 }
-
-function removeCity(){
-        console.log(this)
-        const thisCity = this.parentElement.textContent;
-        const finedCity = favoriteCities.indexOf(thisCity)
-        favoriteCities.splice(finedCity,1);
-        UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
-        this.parentElement.remove();      
-};
-
-
-
-
-
-
 
 
 
