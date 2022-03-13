@@ -1,5 +1,4 @@
-import {favoriteCities} from "./main.js";
-import {getWeather} from "./main.js";
+import {favoriteCities,getWeather} from "./main.js";
 
 export const UI_ELEMENTS = {
     FORM_SEARCH: document.querySelector('.search-form'),
@@ -21,29 +20,31 @@ export const UI_ELEMENTS = {
     FORECAST_LIST: document.querySelector('.weather-forecast__list'),
 }
 
-export function showWeather(object) {
-    UI_ELEMENTS.TITLES_CITY_NOW.textContent = `${object.name}`;
-    UI_ELEMENTS.TITLES_CITY_DETAILS.textContent = `${object.name}`;
-    UI_ELEMENTS.TITLES_CITY_FORECAST.textContent = `${object.name}`;
+export function showWeather(objectWeather) {
+    const cityName = objectWeather.name;
 
-    UI_ELEMENTS.NOW_WEATHER.setAttribute('src',`https://openweathermap.org/img/wn/${object.icon}@4x.png`)
-    UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${object.temp.toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${object.temp.toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${object.temp.toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_WEATHER.textContent = `${object.weather}`;
+    UI_ELEMENTS.TITLES_CITY_NOW.textContent = `${cityName}`;
+    UI_ELEMENTS.TITLES_CITY_DETAILS.textContent = `${cityName}`;
+    UI_ELEMENTS.TITLES_CITY_FORECAST.textContent = `${cityName}`;
 
-    const sunrise = new Date(object.sunrise * 1000);
-    const sunset = new Date(object.sunset * 1000);
+    UI_ELEMENTS.NOW_WEATHER.setAttribute('src',`https://openweathermap.org/img/wn/${objectWeather.icon}@4x.png`)
+    UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${objectWeather.temp.toFixed(0)}°`;
+    UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${objectWeather.temp.toFixed(0)}°`;
+    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${objectWeather.temp.toFixed(0)}°`;
+    UI_ELEMENTS.DETAILS_WEATHER.textContent = `${objectWeather.weather}`;
+
+    const sunrise = new Date(objectWeather.sunrise * 1000);
+    const sunset = new Date(objectWeather.sunset * 1000);
 
     UI_ELEMENTS.DETAILS_SUNRISE.textContent = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
     UI_ELEMENTS.DETAILS_SUNSET.textContent = `${sunset.getHours()}:${sunset.getHours()}`;
 }
 
-export function showForcast(arr) {
+export function showForecast(arrayWeather) {
     UI_ELEMENTS.FORECAST_LIST.innerHTML = '';
     // if (UL.length !== 0) UL.childNodes.forEach(li => li.remove())
-    for (let i = 0; i < arr.length; i++) {
-        const date = arr[i].dt;
+    for (let i = 0; i < arrayWeather.length; i++) {
+        const date = arrayWeather[i].dt;
         UI_ELEMENTS.FORECAST_LIST.innerHTML += `
         <li class="weather-forecast__list-item">
             <div class="weather-forecast__top">
@@ -52,12 +53,12 @@ export function showForcast(arr) {
                 </div>
                 <div class="weather-forecast__bottom">
                 <div class="weather-forecast__parameters">
-                <p class="weather-forecast__text"> Temperature: ${Math.round(arr[i].main.temp)}°</p>
-                <p class="weather-forecast__text"> Feels like: ${Math.round(arr[i].main.feels_like)}°</p>
+                <p class="weather-forecast__text"> Temperature: ${Math.round(arrayWeather[i].main.temp)}°</p>
+                <p class="weather-forecast__text"> Feels like: ${Math.round(arrayWeather[i].main.feels_like)}°</p>
                 </div>
                 <div class="weather-forecast__precipitation">
-                <p class="weather-forecast__text"> ${arr[i].weather[0].main}</p>
-                <img src="https://openweathermap.org/img/wn/${arr[0].weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
+                <p class="weather-forecast__text"> ${arrayWeather[i].weather[0].main}</p>
+                <img src="https://openweathermap.org/img/wn/${arrayWeather[0].weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
                 </div>
             </div>
         </li> 
@@ -104,7 +105,6 @@ export function addFavoriteCity(){
 }
 
 export function createElementForCity(){
-    console.log(favoriteCities)
     const li = document.createElement('li');
     const button = document.createElement('button');
     button.className = 'city-list__close-btn';    

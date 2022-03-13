@@ -1,7 +1,4 @@
-import {UI_ELEMENTS} from "./view.js";
-import {showWeather} from "./view.js";
-import {showForcast} from "./view.js";
-import {addFavoriteCity} from "./view.js";
+import {UI_ELEMENTS,showWeather,showForecast,addFavoriteCity} from "./view.js";
 
 UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeather);
 UI_ELEMENTS.HEART_BTN.addEventListener('click', addFavoriteCity);
@@ -13,9 +10,8 @@ const API_KEY = 'f660a2fb1e4bad108d6160b7f58c555f';
 export const favoriteCities = [];
 
 export function getWeather(){
-    let cityName;
     const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
-    formValue ? cityName = formValue : cityName = this.textContent;
+    const cityName =  formValue || this.textContent;
     const URL = `${SERVER_URL_NOW}?q=${cityName}&appid=${API_KEY}&units=metric`;
     fetch(URL)
         .then(res => res.json())
@@ -30,7 +26,7 @@ export function getWeather(){
                 icon:data.weather[0].icon,
             };
             showWeather(weatherObject);
-            getForcast(cityName);
+            getForecast(cityName);
         })
         .catch((error)=> {
             alert(error)
@@ -38,16 +34,16 @@ export function getWeather(){
         })
 };
 
-export function getForcast(cityName){
+export function getForecast(cityName){
     const URL = `${SERVER_URL_FORCAST}?q=${cityName}&appid=${API_KEY}&cnt=7&units=metric`;
     fetch(URL)
         .then(resp => resp.json())
         .then(data => {
-            let arr = [];
-            arr = arr.concat(data.list);
-            showForcast(arr);
+            let arrayWeather = [];
+            arrayWeather = arrayWeather.concat(data.list);
+            showForecast(arrayWeather);
         })
     UI_ELEMENTS.INPUT_SEARCH.value = '';
     const finedCity = favoriteCities.find(item => item === cityName)
-    if(finedCity === undefined) UI_ELEMENTS.HEART_BTN.classList.remove('active-heard')
+    if(finedCity) UI_ELEMENTS.HEART_BTN.classList.remove('active-heard')
 }
