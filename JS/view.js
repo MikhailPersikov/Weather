@@ -1,4 +1,4 @@
-import {favoriteCities,getWeather} from "./main.js";
+import {favoriteCities,getWeather,IMAGES_URL} from "./main.js";
 
 export const UI_ELEMENTS = {
     FORM_SEARCH: document.querySelector('.search-form'),
@@ -22,15 +22,16 @@ export const UI_ELEMENTS = {
 
 export function showWeather(objectWeather) {
     const cityName = objectWeather.name;
+    const cityTemperature = objectWeather.temp.toFixed(0);
 
     UI_ELEMENTS.TITLES_CITY_NOW.textContent = `${cityName}`;
     UI_ELEMENTS.TITLES_CITY_DETAILS.textContent = `${cityName}`;
     UI_ELEMENTS.TITLES_CITY_FORECAST.textContent = `${cityName}`;
 
-    UI_ELEMENTS.NOW_WEATHER.setAttribute('src',`https://openweathermap.org/img/wn/${objectWeather.icon}@4x.png`)
-    UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${objectWeather.temp.toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${objectWeather.temp.toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${objectWeather.temp.toFixed(0)}°`;
+    UI_ELEMENTS.NOW_WEATHER.setAttribute('src',`${IMAGES_URL}${objectWeather.icon}@4x.png`)
+    UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${cityTemperature}°`;
+    UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${cityTemperature}°`;
+    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${objectWeather.feels_like.toFixed(0)}°`;
     UI_ELEMENTS.DETAILS_WEATHER.textContent = `${objectWeather.weather}`;
 
     const sunrise = new Date(objectWeather.sunrise * 1000);
@@ -58,7 +59,7 @@ export function showForecast(arrayWeather) {
                 </div>
                 <div class="weather-forecast__precipitation">
                 <p class="weather-forecast__text"> ${arrayWeather[i].weather[0].main}</p>
-                <img src="https://openweathermap.org/img/wn/${arrayWeather[0].weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
+                <img src="${IMAGES_URL}${arrayWeather[0].weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
                 </div>
             </div>
         </li> 
