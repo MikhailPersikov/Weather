@@ -44,28 +44,31 @@ export function showWeather(objectWeather) {
 export function showForecast(arrayWeather) {
     UI_ELEMENTS.FORECAST_LIST.innerHTML = '';
     // if (UL.length !== 0) UL.childNodes.forEach(li => li.remove())
-    for (let i = 0; i < arrayWeather.length; i++) {
-        const date = arrayWeather[i].dt;
-        UI_ELEMENTS.FORECAST_LIST.innerHTML += `
-        <li class="weather-forecast__list-item">
-            <div class="weather-forecast__top">
-                <p class="weather-forecast__text">${convertDate(date)}</p>
-                <p class="weather-forecast__text">${convertTime(date)}</p>
+    // for (let i = 0; i < arrayWeather.length; i++) {
+        arrayWeather.forEach((city,index) => {
+            const date = index.dt;
+            console.log(index)
+            UI_ELEMENTS.FORECAST_LIST.innerHTML += `
+            <li class="weather-forecast__list-item">
+                <div class="weather-forecast__top">
+                    <p class="weather-forecast__text">${convertDate(date)}</p>
+                    <p class="weather-forecast__text">${convertTime(date)}</p>
+                    </div>
+                    <div class="weather-forecast__bottom">
+                    <div class="weather-forecast__parameters">
+                    <p class="weather-forecast__text"> Temperature: ${Math.round(arrayWeather[index].main.temp)}°</p>
+                    <p class="weather-forecast__text"> Feels like: ${Math.round(arrayWeather[index].main.feels_like)}°</p>
+                    </div>
+                    <div class="weather-forecast__precipitation">
+                    <p class="weather-forecast__text"> ${city.weather[0].main}</p>
+                    <img src="${IMAGES_URL}${city.weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
+                    </div>
                 </div>
-                <div class="weather-forecast__bottom">
-                <div class="weather-forecast__parameters">
-                <p class="weather-forecast__text"> Temperature: ${Math.round(arrayWeather[i].main.temp)}°</p>
-                <p class="weather-forecast__text"> Feels like: ${Math.round(arrayWeather[i].main.feels_like)}°</p>
-                </div>
-                <div class="weather-forecast__precipitation">
-                <p class="weather-forecast__text"> ${arrayWeather[i].weather[0].main}</p>
-                <img src="${IMAGES_URL}${arrayWeather[0].weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
-                </div>
-            </div>
-        </li> 
-        `
-    }
+            </li> 
+            `
+        }) 
 }
+
 
 function convertTime(ms) {
      return new Date( ms * 1000).toLocaleTimeString('en-GB', {
