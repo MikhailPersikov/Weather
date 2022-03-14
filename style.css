@@ -54,7 +54,7 @@ body{
 }
 
 .search__btn{
-    background: url('./img/search.svg');
+    background: url('IMG/search.svg');
     width: 30px;
     height: 30px;
     border: none;
@@ -62,7 +62,7 @@ body{
 }
 
 .search__btn:hover{
-    background: url('./img/search-active.svg');
+    background: url('IMG/search-active.svg');
 }
 
 .main-box{
@@ -179,7 +179,7 @@ body{
 }
 
 .weather-now__btn{
-    background: url('./img/heart.svg');
+    background: url('IMG/heart.svg');
     width: 24px;
     height: 24px;
     border: none;
@@ -187,7 +187,7 @@ body{
 }
 
 .active-heard{
-    background: url("./img/heart_red.svg");
+    background: url("IMG/heart_red.svg");
 }
 
 .weather-details{
