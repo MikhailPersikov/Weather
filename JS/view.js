@@ -20,56 +20,62 @@ export const UI_ELEMENTS = {
     FORECAST_LIST: document.querySelector('.weather-forecast__list'),
 }
 
-export function showWeather(objectWeather) {
+export function showWeather(objectWeather){
     const cityName = objectWeather.name;
     const cityTemperature = objectWeather.temp.toFixed(0);
+    const citySunrise = objectWeather.sunrise;
+    const citySunset = objectWeather.sunset;
+    const cityFeelslike = objectWeather.feels_like.toFixed(0);
+    const cityWeather = objectWeather.weather;
+    const cityIcon = objectWeather.icon
 
     UI_ELEMENTS.TITLES_CITY_NOW.textContent = `${cityName}`;
     UI_ELEMENTS.TITLES_CITY_DETAILS.textContent = `${cityName}`;
     UI_ELEMENTS.TITLES_CITY_FORECAST.textContent = `${cityName}`;
 
-    UI_ELEMENTS.NOW_WEATHER.setAttribute('src',`${IMAGES_URL}${objectWeather.icon}@4x.png`)
+    UI_ELEMENTS.NOW_WEATHER.setAttribute('src',`${IMAGES_URL}${cityIcon}@4x.png`)
     UI_ELEMENTS.NOW_TEMPERATURE.textContent = `${cityTemperature}°`;
     UI_ELEMENTS.DETAILS_TEMPERATURE.textContent = `${cityTemperature}°`;
-    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${objectWeather.feels_like.toFixed(0)}°`;
-    UI_ELEMENTS.DETAILS_WEATHER.textContent = `${objectWeather.weather}`;
+    UI_ELEMENTS.DETAILS_FEELS_LIKE.textContent = `${cityFeelslike}°`;
+    UI_ELEMENTS.DETAILS_WEATHER.textContent = `${cityWeather}`;
 
-    const sunrise = new Date(objectWeather.sunrise * 1000);
-    const sunset = new Date(objectWeather.sunset * 1000);
-
-    UI_ELEMENTS.DETAILS_SUNRISE.textContent = `${sunrise.getHours()}:${sunrise.getMinutes()}`;
-    UI_ELEMENTS.DETAILS_SUNSET.textContent = `${sunset.getHours()}:${sunset.getHours()}`;
+    UI_ELEMENTS.DETAILS_SUNRISE.textContent = `${convertTime(citySunrise)}`;
+    UI_ELEMENTS.DETAILS_SUNSET.textContent = `${convertTime(citySunset)}`;
 }
 
-export function showForecast(arrayWeather) {
+export function showForecast(arrayWeather){
     UI_ELEMENTS.FORECAST_LIST.innerHTML = '';
-    // if (UL.length !== 0) UL.childNodes.forEach(li => li.remove())
-    // for (let i = 0; i < arrayWeather.length; i++) {
-        arrayWeather.forEach((city,index) => {
-            const date = city.dt;
-            UI_ELEMENTS.FORECAST_LIST.innerHTML += `
-            <li class="weather-forecast__list-item">
-                <div class="weather-forecast__top">
-                    <p class="weather-forecast__text">${convertDate(date)}</p>
-                    <p class="weather-forecast__text">${convertTime(date)}</p>
-                    </div>
-                    <div class="weather-forecast__bottom">
-                    <div class="weather-forecast__parameters">
-                    <p class="weather-forecast__text"> Temperature: ${Math.round(arrayWeather[index].main.temp)}°</p>
-                    <p class="weather-forecast__text"> Feels like: ${Math.round(arrayWeather[index].main.feels_like)}°</p>
-                    </div>
-                    <div class="weather-forecast__precipitation">
-                    <p class="weather-forecast__text"> ${city.weather[0].main}</p>
-                    <img src="${IMAGES_URL}${city.weather[0].icon}.png" alt="weather icon" class="weather-forecast__img">
-                    </div>
+
+    arrayWeather.forEach((city,index) => {
+
+        const date = city.dt;
+        const cityTemperature = Math.round(arrayWeather[index].main.temp);
+        const cityFeelslike = Math.round(arrayWeather[index].main.feels_like);
+        const cityWeather = city.weather[0].main;
+        const cityIcon = city.weather[0].icon;
+
+        UI_ELEMENTS.FORECAST_LIST.innerHTML += `
+        <li class="weather-forecast__list-item">
+            <div class="weather-forecast__top">
+                <p class="weather-forecast__text">${convertDate(date)}</p>
+                <p class="weather-forecast__text">${convertTime(date)}</p>
                 </div>
-            </li> 
-            `
-        }) 
+                <div class="weather-forecast__bottom">
+                <div class="weather-forecast__parameters">
+                <p class="weather-forecast__text"> Temperature: ${cityTemperature}°</p>
+                <p class="weather-forecast__text"> Feels like: ${cityFeelslike}°</p>
+                </div>
+                <div class="weather-forecast__precipitation">
+                <p class="weather-forecast__text"> ${cityWeather}</p>
+                <img src="${IMAGES_URL}${cityIcon}.png" alt="weather icon" class="weather-forecast__img">
+                </div>
+            </div>
+        </li> 
+        `
+    }) 
 }
 
-
-function convertTime(ms) {
+function convertTime(ms){
      return new Date( ms * 1000).toLocaleTimeString('en-GB', {
         hour: 'numeric',
         minute: 'numeric'
