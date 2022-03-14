@@ -46,8 +46,7 @@ export function showForecast(arrayWeather) {
     // if (UL.length !== 0) UL.childNodes.forEach(li => li.remove())
     // for (let i = 0; i < arrayWeather.length; i++) {
         arrayWeather.forEach((city,index) => {
-            const date = index.dt;
-            console.log(index)
+            const date = city.dt;
             UI_ELEMENTS.FORECAST_LIST.innerHTML += `
             <li class="weather-forecast__list-item">
                 <div class="weather-forecast__top">
