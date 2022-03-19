@@ -42,9 +42,7 @@ export function getForecast(cityName){
     fetch(URL)
         .then(resp => resp.json())
         .then(data => {
-            let arrayWeather = [];
-            arrayWeather = arrayWeather.concat(data.list);
-            // arrayWeather = [...data.list]
+            let arrayWeather = [...data.list];
             showForecast(arrayWeather);
         })
     UI_ELEMENTS.INPUT_SEARCH.value = '';
