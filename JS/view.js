@@ -89,29 +89,29 @@ function convertDate(date){
       })
 }
 
-export function removeCity(element){
-    const thisCity = element.parentElement.textContent;
-    const finedCity = favoriteCities.indexOf(thisCity)
-    favoriteCities.splice(finedCity,1);
-    UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
-    element.parentElement.remove();      
-};
-
 export function addFavoriteCity(){
     UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
     const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
     const addedCity = favoriteCities.includes(currentCity,0);
-
-    if(addedCity) {
-        const closeBtn = document.querySelectorAll('.city-list__close-btn')
-        closeBtn.forEach(element =>{
-            if(element.parentElement.textContent === currentCity) removeCity(element);
-      })
-    }else {
+    
+    if (addedCity) {
+        const closeButtons = document.querySelectorAll('.city-list__close-btn')
+        let arrayCloseButtons = Array.from(closeButtons)
+            .find(el => el.parentElement.textContent === currentCity)     
+        if (arrayCloseButtons) removeCity(arrayCloseButtons)
+    } else {
         favoriteCities.push(currentCity);
         createElementForCity();
     }
 }
+
+export function removeCity(element){
+    const thisCity = element.parentElement.textContent;
+    const foundCity = favoriteCities.indexOf(thisCity)
+    favoriteCities.splice(foundCity,1);
+    UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
+    element.parentElement.remove();      
+};
 
 export function createElementForCity(){
     const li = document.createElement('li');

@@ -44,9 +44,10 @@ export function getForecast(cityName){
         .then(data => {
             let arrayWeather = [];
             arrayWeather = arrayWeather.concat(data.list);
+            // arrayWeather = [...data.list]
             showForecast(arrayWeather);
         })
     UI_ELEMENTS.INPUT_SEARCH.value = '';
     const finedCity = favoriteCities.find(item => item === cityName)
-    if(finedCity) UI_ELEMENTS.HEART_BTN.classList.remove('active-heard')
+    if(!finedCity) UI_ELEMENTS.HEART_BTN.classList.remove('active-heard')
 }
