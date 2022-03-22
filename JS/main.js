@@ -12,7 +12,8 @@ export const IMAGES_URL = 'https://openweathermap.org/img/wn/'
 
 export const favoriteCities = [];
 
-export function getWeather(city){
+export function getWeather(e){
+    // e.preventdefault()
     const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
     const cityName =  formValue || this.textContent
     const URL = `${SERVER_URL_NOW}?q=${cityName}&appid=${API_KEY}&${CELSIUS}`;
@@ -38,6 +39,7 @@ export function getWeather(city){
 };
 
 export function getForecast(cityName){
+    // e.preventdefault()
     const URL = `${SERVER_URL_FORCAST}?q=${cityName}&appid=${API_KEY}&${FORECAST_PERIOD}&${CELSIUS}`;
     fetch(URL)
         .then(resp => resp.json())
@@ -51,6 +53,7 @@ export function getForecast(cityName){
 }
 
 function saveStorageState() {
+
     for(let i = 0; i<localStorage.length; i++) {
         let key = localStorage.key(i);
         let receivedKey = localStorage.getItem(key)
@@ -58,6 +61,11 @@ function saveStorageState() {
         favoriteCities.push(cityName)      
         createElementStorage(cityName)      
     }
-    console.log(favoriteCities)
+    if(favoriteCities.length !== 0){
+        UI_ELEMENTS.TITLES_CITY_NOW.textContent = favoriteCities[0];
+        UI_ELEMENTS.HEART_BTN.classList.add('active-heard')
+        console.log(favoriteCities)
+    }
+    
 }
 saveStorageState();
