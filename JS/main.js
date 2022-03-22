@@ -1,4 +1,4 @@
-import {UI_ELEMENTS,showWeather,showForecast,addFavoriteCity} from "./view.js";
+import {UI_ELEMENTS,showWeather,showForecast,addFavoriteCity,createElementStorage} from "./view.js";
 
 UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeather);
 UI_ELEMENTS.HEART_BTN.addEventListener('click', addFavoriteCity);
@@ -12,9 +12,9 @@ export const IMAGES_URL = 'https://openweathermap.org/img/wn/'
 
 export const favoriteCities = [];
 
-export function getWeather(){
+export function getWeather(city){
     const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
-    const cityName =  formValue || this.textContent;
+    const cityName =  formValue || this.textContent
     const URL = `${SERVER_URL_NOW}?q=${cityName}&appid=${API_KEY}&${CELSIUS}`;
     fetch(URL)
         .then(res => res.json())
@@ -49,3 +49,15 @@ export function getForecast(cityName){
     const finedCity = favoriteCities.find(item => item === cityName)
     if(!finedCity) UI_ELEMENTS.HEART_BTN.classList.remove('active-heard')
 }
+
+function saveStorageState() {
+    for(let i = 0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let receivedKey = localStorage.getItem(key)
+        let cityName = JSON.parse(receivedKey)
+        favoriteCities.push(cityName)      
+        createElementStorage(cityName)      
+    }
+    console.log(favoriteCities)
+}
+saveStorageState();

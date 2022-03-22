@@ -1,4 +1,5 @@
 import {favoriteCities,getWeather,IMAGES_URL} from "./main.js";
+import { addCityToStorage } from "./storage.js";
 
 export const UI_ELEMENTS = {
     FORM_SEARCH: document.querySelector('.search-form'),
@@ -75,6 +76,70 @@ export function showForecast(arrayWeather){
     }) 
 }
 
+export function addFavoriteCity(){
+    UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
+    
+    const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
+    const addedCity = favoriteCities.includes(currentCity,0);
+    
+    if (addedCity) {
+        const closeButtons = document.querySelectorAll('.city-list__close-btn')
+        let arrayCloseButtons = Array.from(closeButtons)
+        .find(el => el.parentElement.textContent === currentCity)     
+        if (arrayCloseButtons) removeCity(arrayCloseButtons);
+        // let getCity = localStorage.getItem('cities')
+        // let parseS = JSON.parse(getCity);
+        console.log(arrayCloseButtons)
+
+    } else {
+        favoriteCities.push(currentCity);
+        addCityToStorage();
+        createElementForCity();
+    }
+}
+
+export function removeCity(element){
+    const thisCity = element.parentElement.textContent;
+    const foundCity = favoriteCities.indexOf(thisCity)
+    favoriteCities.splice(foundCity,1);
+    localStorage.removeItem(foundCity)
+    UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
+    element.parentElement.remove();   
+    console.log(favoriteCities)   
+};
+
+export function createElementForCity(){
+    const li = document.createElement('li');
+    const button = document.createElement('button');
+    button.className = 'city-list__close-btn';    
+    li.className = 'city-list__item';
+    li.textContent = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
+    li.append(button);
+    UI_ELEMENTS.FAVORITE_CITIES.append(li);
+    
+    button.addEventListener('click', (e)=> removeCity(e.target)) 
+    li.addEventListener('click', getWeather)
+    li.onclick = ()=> {
+        UI_ELEMENTS.HEART_BTN.classList.add('active-heard')
+    }
+}
+
+export function createElementStorage(city){
+    const li = document.createElement('li');
+    const button = document.createElement('button');
+    button.className = 'city-list__close-btn';    
+    li.className = 'city-list__item';
+    li.textContent = city
+    li.append(button);
+    UI_ELEMENTS.FAVORITE_CITIES.append(li);
+    
+    button.addEventListener('click', (e)=> removeCity(e.target)) 
+    li.addEventListener('click', getWeather)
+    li.onclick = ()=> {
+        UI_ELEMENTS.HEART_BTN.classList.add('active-heard')
+    }
+}
+
 function convertTime(ms){
      return new Date( ms * 1000).toLocaleTimeString('en-GB', {
         hour: 'numeric',
@@ -87,46 +152,6 @@ function convertDate(date){
         month: 'short',
         day: '2-digit',
       })
-}
-
-export function addFavoriteCity(){
-    UI_ELEMENTS.HEART_BTN.classList.toggle('active-heard');
-    const currentCity = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
-    const addedCity = favoriteCities.includes(currentCity,0);
-    
-    if (addedCity) {
-        const closeButtons = document.querySelectorAll('.city-list__close-btn')
-        let arrayCloseButtons = Array.from(closeButtons)
-            .find(el => el.parentElement.textContent === currentCity)     
-        if (arrayCloseButtons) removeCity(arrayCloseButtons)
-    } else {
-        favoriteCities.push(currentCity);
-        createElementForCity();
-    }
-}
-
-export function removeCity(element){
-    const thisCity = element.parentElement.textContent;
-    const foundCity = favoriteCities.indexOf(thisCity)
-    favoriteCities.splice(foundCity,1);
-    UI_ELEMENTS.HEART_BTN.classList.remove('active-heard');
-    element.parentElement.remove();      
-};
-
-export function createElementForCity(){
-    const li = document.createElement('li');
-    const button = document.createElement('button');
-    button.className = 'city-list__close-btn';    
-    li.className = 'city-list__item';
-    li.textContent = UI_ELEMENTS.TITLES_CITY_NOW.textContent;
-    li.append(button);
-    UI_ELEMENTS.FAVORITE_CITIES.append(li);
-
-    button.addEventListener('click', (e)=> removeCity(e.target)) 
-    li.addEventListener('click', getWeather)
-    li.onclick = ()=> {
-        UI_ELEMENTS.HEART_BTN.classList.add('active-heard')
-    }
 }
 
 //-----------------------------------TABS-----------------------------------------
