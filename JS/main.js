@@ -8,14 +8,13 @@ const SERVER_URL_FORCAST = 'https://api.openweathermap.org/data/2.5/forecast'
 const API_KEY = 'f660a2fb1e4bad108d6160b7f58c555f';
 const CELSIUS = 'units=metric';
 const FORECAST_PERIOD = 'cnt=7';
-export const IMAGES_URL = 'https://openweathermap.org/img/wn/'
-
+export const IMAGES_URL = 'https://openweathermap.org/img/wn/';
 export const favoriteCities = [];
 
 export function getWeather(e){
-    // e.preventdefault()
+    e.preventDefault()
     const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
-    const cityName =  formValue || this.textContent
+    const cityName = formValue || this.textContent;
     const URL = `${SERVER_URL_NOW}?q=${cityName}&appid=${API_KEY}&${CELSIUS}`;
     fetch(URL)
         .then(res => res.json())
@@ -30,19 +29,18 @@ export function getWeather(e){
                 icon:data.weather[0].icon,
             };
             showWeather(weatherObject);
-            getForecast(cityName);
         })
         .catch((error)=> {
             alert(error)
             UI_ELEMENTS.INPUT_SEARCH.value = '';
         })
+        getForecast(cityName);
 };
 
 export function getForecast(cityName){
-    // e.preventdefault()
     const URL = `${SERVER_URL_FORCAST}?q=${cityName}&appid=${API_KEY}&${FORECAST_PERIOD}&${CELSIUS}`;
     fetch(URL)
-        .then(resp => resp.json())
+        .then(resp =>  resp.json())
         .then(data => {
             let arrayWeather = [...data.list];
             showForecast(arrayWeather);
@@ -62,10 +60,10 @@ function saveStorageState() {
         createElementStorage(cityName)      
     }
     if(favoriteCities.length !== 0){
-        UI_ELEMENTS.TITLES_CITY_NOW.textContent = favoriteCities[0];
+        UI_ELEMENTS.TITLES_CITY_NOW.textContent = favoriteCities.at(-1);
         UI_ELEMENTS.HEART_BTN.classList.add('active-heard')
         console.log(favoriteCities)
-    }
-    
+    }  
 }
+
 saveStorageState();

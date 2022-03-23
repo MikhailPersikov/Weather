@@ -87,8 +87,6 @@ export function addFavoriteCity(){
         let arrayCloseButtons = Array.from(closeButtons)
         .find(el => el.parentElement.textContent === currentCity)     
         if (arrayCloseButtons) removeCity(arrayCloseButtons);
-        // let getCity = localStorage.getItem('cities')
-        // let parseS = JSON.parse(getCity);
         console.log(arrayCloseButtons)
 
     } else {
