@@ -1,4 +1,5 @@
-import {UI_ELEMENTS,showWeather,showForecast,addFavoriteCity,createElementStorage} from "./view.js";
+import {UI_ELEMENTS,showWeather,showForecast,addFavoriteCity} from "./view.js";
+import {createElementStorage} from './storage.js'
 
 UI_ELEMENTS.FORM_SEARCH.addEventListener('submit', getWeather);
 UI_ELEMENTS.HEART_BTN.addEventListener('click', addFavoriteCity);
@@ -11,30 +12,30 @@ const FORECAST_PERIOD = 'cnt=7';
 export const IMAGES_URL = 'https://openweathermap.org/img/wn/';
 export const favoriteCities = [];
 
-export function getWeather(e){
-    e.preventDefault()
+ export async function getWeather(e){
+    e.preventDefault();
     const formValue = UI_ELEMENTS.INPUT_SEARCH.value;
     const cityName = formValue || this.textContent;
-    const URL = `${SERVER_URL_NOW}?q=${cityName}&appid=${API_KEY}&${CELSIUS}`;
-    fetch(URL)
-        .then(res => res.json())
-        .then(data => {
-            const weatherObject = {
-                name: data.name,
-                temp: data.main.temp,
-                feels_like: data.main.feels_like,
-                weather: data.weather[0].main,
-                sunrise: data.sys.sunrise,
-                sunset: data.sys.sunset,
-                icon:data.weather[0].icon,
-            };
-            showWeather(weatherObject);
-        })
-        .catch((error)=> {
-            alert(error)
-            UI_ELEMENTS.INPUT_SEARCH.value = '';
-        })
-        getForecast(cityName);
+    const url = `${SERVER_URL_NOW}?q=${cityName}&appid=${API_KEY}&${CELSIUS}`;
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        const weatherObject = {
+            name: data.name,
+            temp: data.main.temp,
+            feels_like: data.main.feels_like,
+            weather: data.weather[0].main,
+            sunrise: data.sys.sunrise,
+            sunset: data.sys.sunset,
+            icon:data.weather[0].icon,
+        };
+        showWeather(weatherObject);      
+    } catch(err) { 
+        alert(err);
+    }
+    
+    getForecast(cityName);
+    UI_ELEMENTS.INPUT_SEARCH.value = '';
 };
 
 export function getForecast(cityName){
